@@ -1,0 +1,28 @@
+settings:
+  legacy:
+    force: false
+    interval: 0s
+server:
+  status: true
+  open: true
+  port: 5002
+  host: localhost
+schema:
+- name: go_cooler_cam_api
+  path: .
+  commands:
+    install:
+      status: true
+      method: go build -o ../../../works/go/github.com/hamanako-palpal/go_cooler_cam_api
+    run: 
+      status: true
+      method: ../../../works/go/github.com/hamanako-palpal/go_cooler_cam_api
+  watcher:
+    extensions:
+    - go
+    paths:
+    - /
+    ignored_paths:
+    - .git
+    - .realize
+    - vendor

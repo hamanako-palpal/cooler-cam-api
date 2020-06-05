@@ -1,0 +1,11 @@
+version: '3' # composeファイルのバーション指定
+services:
+  app: # service名
+    build: . # ビルドに使用するDockerfileがあるディレクトリ指定
+    tty: true # コンテナの起動永続化
+    container_name: go_cooler_cam_api
+    volumes:
+      - .:/go/src/work # マウントディレクトリ指定
+    ports:
+      - 8000:8000
+    command: go run main.go
