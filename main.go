@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/gorilla/mux"
-	"github.com/hamanako-palpal/go_cooler_cam_api/handle"
+	"github.com/hamanako-palpal/cooler-cam-api/handle"
 	_ "github.com/lib/pq"
 
 	"fmt"

@@ -1,6 +1,6 @@
 package repositories
 
-import "github.com/hamanako-palpal/go_cooler_cam_api/entities"
+import "github.com/hamanako-palpal/cooler-cam-api/entities"
 
 // LabelRepository ラベル管理
 type LabelRepository interface {

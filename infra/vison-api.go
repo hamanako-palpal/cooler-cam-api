@@ -1,7 +1,7 @@
 package infra
 
 import (
-	"github.com/hamanako-palpal/go_cooler_cam_api/entities"
+	"github.com/hamanako-palpal/cooler-cam-api/entities"
 
 	"encoding/json"
 	"fmt"

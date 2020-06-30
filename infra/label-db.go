@@ -5,8 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/hamanako-palpal/go_cooler_cam_api/entities"
-	// _ "github.com/lib/pq"
+	"github.com/hamanako-palpal/cooler-cam-api/entities"
 )
 
 // LabelCli ラベルテーブルクライアント
