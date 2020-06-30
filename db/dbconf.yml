@@ -1,0 +1,6 @@
+development:
+    driver: postgres
+    open: host=postgres port=5432 user=app_user password=password dbname=app_db sslmode=disable
+production:
+    driver: postgres
+    open: EMPTY

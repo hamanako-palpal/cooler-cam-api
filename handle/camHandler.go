@@ -1,44 +1,66 @@
 package handle
 
 import (
+	"github.com/hamanako-palpal/go_cooler_cam_api/entities"
+	"github.com/hamanako-palpal/go_cooler_cam_api/infra"
+	"github.com/hamanako-palpal/go_cooler_cam_api/services"
+
 	"encoding/json"
 	"fmt"
-	"go_cooler_cam_api/entities"
-	"go_cooler_cam_api/services"
-	"log"
 	"net/http"
 )
+
+// CamHandler カメラ
+type CamHandler struct {
+	cs *services.CamService
+}
+
+// InitCamHandler 初期化
+func InitCamHandler() *CamHandler {
+
+	vcl := infra.InitVisionCli()
+	lcl := infra.InitLabelCli()
+	camService := services.NewCamService(vcl, lcl)
+
+	return &CamHandler{
+		cs: camService,
+	}
+}
 
 // SmplHandler 導通確認
 func SmplHandler(w http.ResponseWriter, r *http.Request) {
 
-	aso := &entities.Images{FileName: "aa", Contents: "t11t41t54t"}
-	res, _ := json.Marshal(aso)
+	img := &entities.ImageRequest{FileName: "aa", Contents: "smpl"}
+	res, _ := json.Marshal(img)
 	w.Write(res)
 }
 
-// CamHandler 受信したカメラの画像をvisionAPIに投入
-func CamHandler(w http.ResponseWriter, r *http.Request) {
+// AnnotateImage 受信したカメラの画像をvisionAPIに投入
+func (ch *CamHandler) AnnotateImage(w http.ResponseWriter, r *http.Request) {
 
-	var img entities.Images
+	// リクエストマッピング
+	var img entities.ImageRequest
 	err := json.NewDecoder(r.Body).Decode(&img)
 
 	if err != nil {
-		fmt.Println("error1")
-		log.Fatal(err)
+		fmt.Println("CamHandler error: MISS MAPPING")
 		return
 	}
 
-	res, err := json.Marshal(img)
-	if err != nil {
-		fmt.Println("error2")
-		log.Fatal(err)
-		return
-	}
-	fmt.Println(string(res))
+	visionRes := ch.cs.GetLabel(&img)
+	selectedRecord := ch.cs.SelectHighScore(visionRes)
+	responce := ch.cs.InsertLabels(selectedRecord)
+	resjson, _ := json.Marshal(responce)
 
 	w.Header().Set("Content-Type", "application/json")
-	visionRes := services.Annotate(&img)
-	w.Write(visionRes)
+	w.Write(resjson)
 
+}
+
+// ViewAllLabels 全件取得
+func (ch *CamHandler) ViewAllLabels(w http.ResponseWriter, r *http.Request) {
+	responce := ch.cs.GetAllLabels()
+	resjson, _ := json.Marshal(&responce)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(resjson)
 }

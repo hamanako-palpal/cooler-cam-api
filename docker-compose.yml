@@ -4,8 +4,24 @@ services:
     build: . # ビルドに使用するDockerfileがあるディレクトリ指定
     tty: true # コンテナの起動永続化
     container_name: go_cooler_cam_api
+    links: [postgres]
     volumes:
       - .:/go/src/work # マウントディレクトリ指定
     ports:
       - 8000:8000
-    command: go run main.go
+    command: air
+
+  postgres:
+    # コンテナの名前
+    container_name: postgres
+    image: postgres:alpine
+    ports:
+      - 5432:5432
+    hostname: postgres
+    restart: always
+    # postgres 設定
+    environment:
+      - POSTGRES_USER=app_user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=app_db
+    

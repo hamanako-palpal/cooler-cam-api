@@ -1,82 +1,72 @@
 package services
 
 import (
-	"encoding/json"
-	"fmt"
-	"go_cooler_cam_api/entities"
-	"golang.org/x/net/context"
-	"golang.org/x/oauth2/google"
-	"io/ioutil"
-	"log"
+	"time"
 
-	// package名はvisionになっている
-	"google.golang.org/api/vision/v1"
+	"github.com/hamanako-palpal/go_cooler_cam_api/entities"
+	"github.com/hamanako-palpal/go_cooler_cam_api/repositories"
 )
 
-// CreateService サービスクライアント生成
-func CreateService() *vision.Service {
-
-	raw, err := ioutil.ReadFile("./VisionIdentify.json")
-	if err != nil {
-		fmt.Println("CreateService error0")
-		log.Fatal(err)
-		return nil
-	}
-
-	cfg, err := google.JWTConfigFromJSON(raw, vision.CloudPlatformScope)
-
-	if err != nil {
-		fmt.Println("CreateService error1")
-		log.Fatal(err)
-		return nil
-	}
-
-	// OAuth2の認可を付与したHTTPクライアントを作る
-	client := cfg.Client(context.Background())
-	// Vision APIのサービスを作る
-	svc, err := vision.New(client)
-
-	if err != nil {
-		fmt.Println("CreateService error2")
-		log.Fatal(err)
-		return nil
-	}
-	return svc
+// CamService カメラから受け取った画像を分析
+type CamService struct {
+	vrepo repositories.VisionRepository
+	lrepo repositories.LabelRepository
 }
 
-// Annotate 分析
-func Annotate(cm *entities.Images) []byte {
+// NewCamService 初期化
+func NewCamService(v repositories.VisionRepository, l repositories.LabelRepository) *CamService {
 
-	// 使いたいVisionの機能
-	feature := &vision.Feature{
-		Type:       "LABEL_DETECTION",
-		MaxResults: 3,
+	return &CamService{
+		vrepo: v,
+		lrepo: l,
 	}
+}
 
-	// 目当ての画像データ
-	img := &vision.Image{Content: cm.Contents}
+// GetLabel 画像のラベルの取得
+func (cs CamService) GetLabel(cm *entities.ImageRequest) []entities.LabelResponce {
 
-	req := &vision.AnnotateImageRequest{
-		Image:    img,
-		Features: []*vision.Feature{feature},
+	bd := cs.vrepo.CallAnnotate(cm)
+
+	return bd
+}
+
+// SelectHighScore 好スコアの項目のみ抽出する(90%以上)
+func (cs CamService) SelectHighScore(lres []entities.LabelResponce) []entities.LabelModel {
+
+	var selected []entities.LabelModel
+	for i := 0; i < len(lres); i++ {
+
+		if lres[i].Score > 90.0 {
+			selected = append(selected, entities.LabelModel{
+				Label: lres[i].Description,
+				Date:  time.Now().String(),
+			})
+		}
 	}
+	return selected
+}
 
-	// 1回の呼び出しで複数の処理を要求できる
-	batch := &vision.BatchAnnotateImagesRequest{
-		Requests: []*vision.AnnotateImageRequest{req},
+// InsertLabels ラベルテーブルへの挿入
+func (cs CamService) InsertLabels(lms []entities.LabelModel) *entities.Request {
+
+	for i := 0; i < len(lms); i++ {
+
+		req := cs.lrepo.InsertOne(&lms[i])
+		if req.Status != 500 {
+			return &entities.Request{
+				Status: 400,
+				Result: "ng",
+			}
+		}
 	}
-
-	// 実際のAPIコールを実行
-	res, err := CreateService().Images.Annotate(batch).Do()
-	if err != nil {
-		fmt.Println("Annotate error1")
-		log.Fatal(err)
-		return nil
+	return &entities.Request{
+		Status: 500,
+		Result: "ok",
 	}
+}
 
-	// 結果をJSON出力してみる
-	body, _ := json.Marshal(res.Responses[0].LabelAnnotations)
+// GetAllLabels ラベルテーブル全件取得
+func (cs CamService) GetAllLabels() []entities.LabelModel {
 
-	return body
-
+	return cs.lrepo.FindAll()
 }
