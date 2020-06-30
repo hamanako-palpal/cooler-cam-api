@@ -3,7 +3,7 @@ services:
   app: # service名
     build: . # ビルドに使用するDockerfileがあるディレクトリ指定
     tty: true # コンテナの起動永続化
-    container_name: go_cooler_cam_api
+    container_name: cooler-cam-api
     links: [postgres]
     volumes:
       - .:/go/src/work # マウントディレクトリ指定
