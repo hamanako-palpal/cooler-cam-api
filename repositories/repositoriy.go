@@ -6,7 +6,7 @@ import "github.com/hamanako-palpal/cooler-cam-api/entities"
 type LabelRepository interface {
 	// Find(string) entities.LabelModel
 	FindAll() []entities.LabelModel
-	InsertOne(*entities.LabelModel) *entities.Request
+	InsertOne(entities.LabelModel) *entities.Request
 }
 
 // VisionRepository VisionAPIコール

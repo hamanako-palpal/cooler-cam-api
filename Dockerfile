@@ -2,7 +2,7 @@
 FROM golang:latest
 
 ENV GO111MODULE=on
-ENV EXEC_ENV=product
+ENV EXEC_ENV=develop
 # コンテナ内に作業ディレクトリを作成
 RUN mkdir /go/src/work
 # コンテナログイン時のディレクトリ指定

@@ -8,8 +8,8 @@ type LabelModel struct {
 
 // LabelResponce VisionAPIのレスポンス
 type LabelResponce struct {
-	Description string
-	Mid         string
-	Score       float32
-	Topicality  float32
+	Description string  `json:description`
+	Mid         string  `json:mid`
+	Score       float64 `json:score`
+	Topicality  float64 `json:topicality`
 }

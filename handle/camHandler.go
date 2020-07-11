@@ -12,18 +12,18 @@ import (
 
 // CamHandler カメラ
 type CamHandler struct {
-	cs *services.CamService
+	camservice *services.CamService
 }
 
 // InitCamHandler 初期化
 func InitCamHandler() *CamHandler {
 
-	vcl := infra.InitVisionCli()
-	lcl := infra.InitLabelCli()
-	camService := services.NewCamService(vcl, lcl)
+	visioncli := infra.InitVisionCli()
+	labelcli := infra.InitLabelCli()
+	camService := services.NewCamService(visioncli, labelcli)
 
 	return &CamHandler{
-		cs: camService,
+		camservice: camService,
 	}
 }
 
@@ -36,7 +36,7 @@ func SmplHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // AnnotateImage 受信したカメラの画像をvisionAPIに投入
-func (ch *CamHandler) AnnotateImage(w http.ResponseWriter, r *http.Request) {
+func (camhdlr *CamHandler) AnnotateImage(w http.ResponseWriter, r *http.Request) {
 
 	// リクエストマッピング
 	var img entities.ImageRequest
@@ -47,9 +47,9 @@ func (ch *CamHandler) AnnotateImage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	visionRes := ch.cs.GetLabel(&img)
-	selectedRecord := ch.cs.SelectHighScore(visionRes)
-	responce := ch.cs.InsertLabels(selectedRecord)
+	visionRes := camhdlr.camservice.GetLabel(&img)
+	selectedRecord := camhdlr.camservice.SelectHighScore(visionRes)
+	responce := camhdlr.camservice.InsertLabels(selectedRecord)
 	resjson, _ := json.Marshal(responce)
 
 	w.Header().Set("Content-Type", "application/json")
@@ -58,9 +58,9 @@ func (ch *CamHandler) AnnotateImage(w http.ResponseWriter, r *http.Request) {
 }
 
 // ViewAllLabels 全件取得
-func (ch *CamHandler) ViewAllLabels(w http.ResponseWriter, r *http.Request) {
-	responce := ch.cs.GetAllLabels()
-	resjson, _ := json.Marshal(&responce)
+func (camhdlr *CamHandler) ViewAllLabels(w http.ResponseWriter, r *http.Request) {
+	responce := camhdlr.camservice.GetAllLabels()
+	resjson, _ := json.Marshal(responce)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(resjson)
 }

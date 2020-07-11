@@ -9,23 +9,23 @@ import (
 
 // CamService カメラから受け取った画像を分析
 type CamService struct {
-	vrepo repositories.VisionRepository
-	lrepo repositories.LabelRepository
+	visionRepo repositories.VisionRepository
+	labelRepo  repositories.LabelRepository
 }
 
 // NewCamService 初期化
 func NewCamService(v repositories.VisionRepository, l repositories.LabelRepository) *CamService {
 
 	return &CamService{
-		vrepo: v,
-		lrepo: l,
+		visionRepo: v,
+		labelRepo:  l,
 	}
 }
 
 // GetLabel 画像のラベルの取得
 func (cs CamService) GetLabel(cm *entities.ImageRequest) []entities.LabelResponce {
 
-	bd := cs.vrepo.CallAnnotate(cm)
+	bd := cs.visionRepo.CallAnnotate(cm)
 
 	return bd
 }
@@ -36,10 +36,10 @@ func (cs CamService) SelectHighScore(lres []entities.LabelResponce) []entities.L
 	var selected []entities.LabelModel
 	for i := 0; i < len(lres); i++ {
 
-		if lres[i].Score > 90.0 {
+		if lres[i].Score > 0.90 {
 			selected = append(selected, entities.LabelModel{
 				Label: lres[i].Description,
-				Date:  time.Now().String(),
+				Date:  time.Now().Format("2006-01-02"),
 			})
 		}
 	}
@@ -49,24 +49,22 @@ func (cs CamService) SelectHighScore(lres []entities.LabelResponce) []entities.L
 // InsertLabels ラベルテーブルへの挿入
 func (cs CamService) InsertLabels(lms []entities.LabelModel) *entities.Request {
 
+	var req *entities.Request
 	for i := 0; i < len(lms); i++ {
 
-		req := cs.lrepo.InsertOne(&lms[i])
-		if req.Status != 500 {
+		req = cs.labelRepo.InsertOne(lms[i])
+		if req.Status != 200 {
 			return &entities.Request{
 				Status: 400,
 				Result: "ng",
 			}
 		}
 	}
-	return &entities.Request{
-		Status: 500,
-		Result: "ok",
-	}
+	return req
 }
 
 // GetAllLabels ラベルテーブル全件取得
 func (cs CamService) GetAllLabels() []entities.LabelModel {
 
-	return cs.lrepo.FindAll()
+	return cs.labelRepo.FindAll()
 }
