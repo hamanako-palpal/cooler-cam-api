@@ -15,6 +15,7 @@ import (
 
 func main() {
 
+	// EXEC_ENVはDockerfile内で指定
 	err := godotenv.Load(fmt.Sprintf("./%s.env", os.Getenv("EXEC_ENV")))
 	if err != nil {
 		fmt.Println("CANNNOT READ ENV FILE")
@@ -26,10 +27,10 @@ func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/api/smpl", handle.SmplHandler).Methods("GET")
 	r.HandleFunc("/api/cam", camhandler.AnnotateImage).Methods("POST")
-	r.HandleFunc("/api/cam/all", camhandler.ViewAllLabels).Methods("GET")
+	r.HandleFunc("/api/cam/labels", camhandler.ViewAllLabels).Methods("GET")
 
 	s := &http.Server{
-		Addr:    ":8000",
+		Addr:    ":" + os.Getenv("PORT"),
 		Handler: r,
 	}
 	s.ListenAndServe()
