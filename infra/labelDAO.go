@@ -50,11 +50,12 @@ func (cli LabelCli) FindAll() []entities.LabelModel {
 	rows, err := cli.db.Query("SELECT * FROM labels;")
 	if err != nil {
 		fmt.Println(err)
+		return lmodels
 	}
 	if rows == nil {
 		fmt.Println("row is nil!!!!!!!!!!!!!!!!")
+		return lmodels
 	}
-	return lmodels
 
 	for rows.Next() {
 		var l string
