@@ -2,4 +2,4 @@ build:
     docker:
       web: docker/Dockerfile.product
 run:
-    app: /build/app
+    web: /build/app
