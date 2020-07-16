@@ -10,8 +10,7 @@ WORKDIR /go/src/work
 # ホストのファイルをコンテナの作業ディレクトリに移行
 ADD . /go/src/work
 
-RUN go mod download
-RUN GOOS=linux GOARCH=amd64 go build -o=/build/app && \
+RUN go build -o=/build/app
 RUN chmod u+x /build/app
 
 ENTRYPOINT ["/build/app"]
