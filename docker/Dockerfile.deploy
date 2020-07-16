@@ -17,9 +17,12 @@ RUN go get -u -v bitbucket.org/liamstask/goose/cmd/goose
 
 # コンテナ内に作業ディレクトリを作成
 RUN mkdir /go/src/work
-# コンテナログイン時のディレクトリ指定
 WORKDIR /go/src/work
+RUN git clone https://github.com/hamanako-palpal/cooler-cam-api
 # ホストのファイルをコンテナの作業ディレクトリに移行
-ADD . /go/src/work
+# コンテナログイン時のディレクトリ指定
+COPY product.env /go/src/work/cooler-cam-api
+COPY VisionIdentify.json /go/src/work/cooler-cam-api
+RUN cd cooler-cam-api
 
-CMD heroku
+CMD /bin/sh

@@ -30,3 +30,17 @@ select pls.
 > open localhost:8000/api/smpl
 ## finish?
 > docker-compose down
+# product Env
+> docker build -f docker/Dockerfile.deploy -t heroku-deploy .
+> docker run --rm -it heroku-deploy
+>> cd cooler-cam-api
+>> heroku login -i
+>>> set mail-address
+>>> set password
+>> git config --global user.email "<your-account>"
+>> git config --global user.name "<youe-name>"
+>> heroku git:remote -a new-wave-cooler-app
+>> git add .
+>> git commit -am "something message"
+>> heroku stack:set container
+>> git push heroku master
