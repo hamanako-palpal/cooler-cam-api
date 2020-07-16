@@ -3,9 +3,9 @@ package infra
 import (
 	"database/sql"
 	"fmt"
-	"os"
 
 	"github.com/hamanako-palpal/cooler-cam-api/entities"
+	"github.com/hamanako-palpal/cooler-cam-api/repositories"
 )
 
 // LabelCli ラベルテーブルクライアント
@@ -14,26 +14,9 @@ type LabelCli struct {
 }
 
 // InitLabelCli クライアント作成
-func InitLabelCli() LabelCli {
+func InitLabelCli(db *sql.DB) repositories.LabelRepository {
 
-	dburi := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=%s",
-		os.Getenv("DB_USER"),
-		os.Getenv("DB_PASSWORD"),
-		os.Getenv("DB_HOST"),
-		os.Getenv("DB_PORT"),
-		os.Getenv("DB_INST"),
-		os.Getenv("DB_SSLMODE"))
-
-	db, err := sql.Open("postgres", dburi)
-	defer db.Close()
-
-	if err != nil {
-		fmt.Println(err)
-		return LabelCli{
-			db: nil,
-		}
-	}
-	return LabelCli{
+	return &LabelCli{
 		db: db,
 	}
 }
@@ -43,7 +26,7 @@ func InitLabelCli() LabelCli {
 // }
 
 // FindAll 全件取得
-func (cli LabelCli) FindAll() []entities.LabelModel {
+func (cli *LabelCli) FindAll() []entities.LabelModel {
 
 	var lmodels []entities.LabelModel
 
@@ -70,19 +53,18 @@ func (cli LabelCli) FindAll() []entities.LabelModel {
 }
 
 // InsertOne 更新操作
-func (cli LabelCli) InsertOne(lm entities.LabelModel) *entities.Request {
-
-	fmt.Println(cli.db)
+func (cli *LabelCli) InsertOne(lm entities.LabelModel) *entities.Request {
 
 	// INSERT
 	insertQuery := "insert into labels (LABEL, DATE) values ($1, $2);"
+
 	_, err := cli.db.Exec(insertQuery, lm.Label, lm.Date)
 
 	if err != nil {
 		fmt.Println(err)
 		return &entities.Request{
 			Status: 400,
-			Result: "ng",
+			Result: "miising InsertOne",
 		}
 	}
 	return &entities.Request{

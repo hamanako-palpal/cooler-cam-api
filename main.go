@@ -4,11 +4,11 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/gorilla/mux"
-	"github.com/hamanako-palpal/cooler-cam-api/handle"
-	_ "github.com/lib/pq"
-
 	"fmt"
+
+	"github.com/gorilla/mux"
+	"github.com/hamanako-palpal/cooler-cam-api/config"
+	_ "github.com/lib/pq"
 
 	"github.com/joho/godotenv"
 )
@@ -21,17 +21,26 @@ func main() {
 		fmt.Println("CANNNOT READ ENV FILE")
 	}
 
-	fmt.Println("Server Open!")
-	camhandler := handle.InitCamHandler()
+	// DBインスタンス生成
+	db := config.CreateDB()
+	handlerGen, initErr := Initialize(db)
+	if initErr != nil {
+		fmt.Println("CANNOT DI")
+	}
 
+	fmt.Println("Server Open!")
 	r := mux.NewRouter()
-	r.HandleFunc("/api/smpl", handle.SmplHandler).Methods("GET")
-	r.HandleFunc("/api/cam", camhandler.AnnotateImage).Methods("POST")
-	r.HandleFunc("/api/cam/labels", camhandler.ViewAllLabels).Methods("GET")
+	r.HandleFunc("/api/smpl", handlerGen.Smplhandler.Ping).Methods("GET")
+	r.HandleFunc("/api/cam", handlerGen.Camhandler.AnnotateImage).Methods("POST")
+	r.HandleFunc("/api/cam/labels", handlerGen.Camhandler.ViewAllLabels).Methods("GET")
 
 	s := &http.Server{
 		Addr:    ":" + os.Getenv("PORT"),
 		Handler: r,
 	}
 	s.ListenAndServe()
+	defer func() {
+		db.Close()
+		fmt.Println("Server Close!")
+	}()
 }

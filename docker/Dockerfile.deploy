@@ -13,7 +13,7 @@ RUN curl -L https://cli-assets.heroku.com/apt/release.key | apt-key add -
 RUN apt update
 RUN apt install -y heroku
 
-RUN go get -u bitbucket.org/liamstask/goose/cmd/goose
+RUN go get -u -v bitbucket.org/liamstask/goose/cmd/goose
 
 # コンテナ内に作業ディレクトリを作成
 RUN mkdir /go/src/work

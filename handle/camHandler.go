@@ -2,7 +2,6 @@ package handle
 
 import (
 	"github.com/hamanako-palpal/cooler-cam-api/entities"
-	"github.com/hamanako-palpal/cooler-cam-api/infra"
 	"github.com/hamanako-palpal/cooler-cam-api/services"
 
 	"encoding/json"
@@ -16,23 +15,10 @@ type CamHandler struct {
 }
 
 // InitCamHandler 初期化
-func InitCamHandler() *CamHandler {
-
-	visioncli := infra.InitVisionCli()
-	labelcli := infra.InitLabelCli()
-	camService := services.NewCamService(visioncli, labelcli)
-
+func InitCamHandler(camsvc *services.CamService) *CamHandler {
 	return &CamHandler{
-		camservice: camService,
+		camservice: camsvc,
 	}
-}
-
-// SmplHandler 導通確認
-func SmplHandler(w http.ResponseWriter, r *http.Request) {
-
-	img := &entities.ImageRequest{FileName: "aa", Contents: "smpl"}
-	res, _ := json.Marshal(img)
-	w.Write(res)
 }
 
 // AnnotateImage 受信したカメラの画像をvisionAPIに投入

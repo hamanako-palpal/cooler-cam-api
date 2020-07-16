@@ -10,8 +10,9 @@ WORKDIR /go/src/work
 # ホストのファイルをコンテナの作業ディレクトリに移行
 ADD . /go/src/work
 
-# airのインストール
-RUN go get -u github.com/cosmtrek/air \
+# air,goose,wireのインストール
+RUN go get -u -v github.com/cosmtrek/air \
+    github.com/google/wire/cmd/wire \
     bitbucket.org/liamstask/goose/cmd/goose
 
 RUN go mod download

@@ -11,20 +11,22 @@
 - docker-compose
 - git
 ## Step
-git clone https://github.com/hamanako-palpal/cooler-cam-api.git
-cd cooler-cam-api
+> git clone https://github.com/hamanako-palpal/cooler-cam-api.git
+> cd cooler-cam-api
 ## get Identify-Key(Google-Vision-Api)
 place file "VisionIdentify.json" on current directry(cooler-cam-api/VisionIdentify.json)
 select pls.
 - get file uploaded to Trello
 - get your GCP account 'n' issue yourself
 ## build on env-develop
-docker-compose build
+> docker-compose build
 ## run docker
-docker-compose up -d
+> docker-compose up -d
 ## create table
-docker-compose exec app bash  
-> goose -path go/src/work/db up  
-> exit
+> docker-compose exec app bash
+>> $ goose -path go/src/work/db up  
+>> $ exit
 ## access
-localhost:8000/api/smpl
+> open localhost:8000/api/smpl
+## finish?
+> docker-compose down

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/hamanako-palpal/cooler-cam-api/entities"
+	"github.com/hamanako-palpal/cooler-cam-api/repositories"
 
 	"fmt"
 	"io/ioutil"
@@ -22,7 +23,7 @@ type VisionCli struct {
 }
 
 // InitVisionCli クライアント生成
-func InitVisionCli() *VisionCli {
+func InitVisionCli() repositories.VisionRepository {
 
 	raw, err := ioutil.ReadFile("./VisionIdentify.json")
 	if err != nil {
