@@ -4,7 +4,7 @@
 - goose
 - dotenv
 - gorilla web-toolkit
-- wire (feature)
+- wire
 # How to run?
 ## download tools
 - docker
