@@ -10,6 +10,10 @@ services:
     ports:
       - 8000:8000
     command: air
+    security_opt:
+      - apparmor:unconfined
+    cap_add:
+      - SYS_PTRACE
 
   postgres:
     # コンテナの名前

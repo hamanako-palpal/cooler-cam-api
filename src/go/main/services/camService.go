@@ -3,8 +3,8 @@ package services
 import (
 	"time"
 
-	"github.com/hamanako-palpal/cooler-cam-api/entities"
-	"github.com/hamanako-palpal/cooler-cam-api/repositories"
+	"github.com/hamanako-palpal/cooler-cam-api/src/go/main/entities"
+	"github.com/hamanako-palpal/cooler-cam-api/src/go/main/repositories"
 )
 
 // CamService カメラから受け取った画像を分析

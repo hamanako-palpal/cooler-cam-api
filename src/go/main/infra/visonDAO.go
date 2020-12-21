@@ -3,8 +3,8 @@ package infra
 import (
 	"encoding/json"
 
-	"github.com/hamanako-palpal/cooler-cam-api/entities"
-	"github.com/hamanako-palpal/cooler-cam-api/repositories"
+	"github.com/hamanako-palpal/cooler-cam-api/src/go/main/entities"
+	"github.com/hamanako-palpal/cooler-cam-api/src/go/main/repositories"
 
 	"fmt"
 	"io/ioutil"
@@ -25,7 +25,7 @@ type VisionCli struct {
 // InitVisionCli クライアント生成
 func InitVisionCli() repositories.VisionRepository {
 
-	raw, err := ioutil.ReadFile("./VisionIdentify.json")
+	raw, err := ioutil.ReadFile("../../../../../VisionIdentify.json")
 	if err != nil {
 		fmt.Println("Not found identify key")
 		log.Fatal(err)

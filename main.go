@@ -7,7 +7,7 @@ import (
 	"fmt"
 
 	"github.com/gorilla/mux"
-	"github.com/hamanako-palpal/cooler-cam-api/config"
+	"github.com/hamanako-palpal/cooler-cam-api/src/go/main/config"
 	_ "github.com/lib/pq"
 
 	"github.com/joho/godotenv"
@@ -25,7 +25,7 @@ func main() {
 	db := config.CreateDB()
 	handlerGen, initErr := Initialize(db)
 	if initErr != nil {
-		fmt.Println("CANNOT DI")
+		fmt.Println("CANNOT, DI")
 	}
 
 	fmt.Println("Server Open!")

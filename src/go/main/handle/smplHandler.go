@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/hamanako-palpal/cooler-cam-api/entities"
+	"github.com/hamanako-palpal/cooler-cam-api/src/go/main/entities"
 )
 
 // SmplHandler 導通チェック用

@@ -1,8 +1,8 @@
 package handle
 
 import (
-	"github.com/hamanako-palpal/cooler-cam-api/entities"
-	"github.com/hamanako-palpal/cooler-cam-api/services"
+	"github.com/hamanako-palpal/cooler-cam-api/src/go/main/entities"
+	"github.com/hamanako-palpal/cooler-cam-api/src/go/main/services"
 
 	"encoding/json"
 	"fmt"

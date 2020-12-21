@@ -6,9 +6,9 @@ import (
 	"database/sql"
 
 	"github.com/google/wire"
-	"github.com/hamanako-palpal/cooler-cam-api/handle"
-	"github.com/hamanako-palpal/cooler-cam-api/infra"
-	"github.com/hamanako-palpal/cooler-cam-api/services"
+	"github.com/hamanako-palpal/cooler-cam-api/src/go/main/handle"
+	"github.com/hamanako-palpal/cooler-cam-api/src/go/main/infra"
+	"github.com/hamanako-palpal/cooler-cam-api/src/go/main/services"
 )
 
 // Initialize 初期化

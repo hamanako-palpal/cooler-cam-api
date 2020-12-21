@@ -7,9 +7,9 @@ package main
 
 import (
 	"database/sql"
-	"github.com/hamanako-palpal/cooler-cam-api/handle"
-	"github.com/hamanako-palpal/cooler-cam-api/infra"
-	"github.com/hamanako-palpal/cooler-cam-api/services"
+	"github.com/hamanako-palpal/cooler-cam-api/src/go/main/handle"
+	"github.com/hamanako-palpal/cooler-cam-api/src/go/main/infra"
+	"github.com/hamanako-palpal/cooler-cam-api/src/go/main/services"
 )
 
 import (

@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/hamanako-palpal/cooler-cam-api/entities"
-	"github.com/hamanako-palpal/cooler-cam-api/repositories"
+	"github.com/hamanako-palpal/cooler-cam-api/src/go/main/entities"
+	"github.com/hamanako-palpal/cooler-cam-api/src/go/main/repositories"
 )
 
 // LabelCli ラベルテーブルクライアント
